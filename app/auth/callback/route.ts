@@ -4,12 +4,16 @@ import { createAuthClient } from '@/lib/auth'
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const code = searchParams.get('code')
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
 
   if (code) {
     const supabase = await createAuthClient()
-    await supabase.auth.exchangeCodeForSession(code)
+    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    if (error) {
+      // Auth failed — send back to login with error flag
+      return Response.redirect(new URL('/login?error=auth', req.url))
+    }
   }
 
-  return Response.redirect(`${appUrl}/dashboard`)
+  // Redirect relative to request URL — works on any domain (race-pace.run or localhost)
+  return Response.redirect(new URL('/dashboard', req.url))
 }
