@@ -40,7 +40,9 @@ export async function POST(req: NextRequest) {
     })
     stripeAccountId = account.id
   } catch (err: unknown) {
-    return Response.json({ error: `Stripe error: ${err instanceof Error ? err.message : 'unknown'}` }, { status: 500 })
+    const msg = err instanceof Error ? err.message : String(err)
+    console.error('Stripe account creation failed:', msg)
+    return Response.json({ error: msg }, { status: 500 })
   }
 
   // Insert runner
