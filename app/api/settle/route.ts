@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
-import { stripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/stripe'
 import { computeSettlement } from '@/lib/settlement'
 
 export async function POST(req: NextRequest) {
@@ -10,6 +10,7 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: 'Missing required fields' }, { status: 400 })
   }
 
+  const stripe = getStripe()
   const db = createServiceClient()
 
   // Load runner

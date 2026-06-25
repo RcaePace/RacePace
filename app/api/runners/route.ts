@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
-import { stripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/stripe'
 import { sendWelcomeEmail } from '@/lib/email'
 
 export async function GET() {
@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
   if (existing) return Response.json({ error: 'A campaign already exists for this email.' }, { status: 409 })
 
   // Create Stripe Connect Express account
+  const stripe = getStripe()
   let stripeAccountId: string
   try {
     const account = await stripe.accounts.create({

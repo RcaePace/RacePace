@@ -9,7 +9,6 @@ export function getStripe(): Stripe {
   })
 }
 
-export const stripe = getStripe()
 
 export function toSeconds(hms: string): number {
   const [h, m, s] = hms.split(':').map(Number)

@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
-import { stripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/stripe'
 
 export async function POST(req: NextRequest) {
   const { runnerId, donorName, donorEmail, amount, message } = await req.json()
@@ -9,6 +9,7 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: 'Missing or invalid fields. Minimum pledge is €5.' }, { status: 400 })
   }
 
+  const stripe = getStripe()
   const db = createServiceClient()
 
   // Verify runner exists and is active
